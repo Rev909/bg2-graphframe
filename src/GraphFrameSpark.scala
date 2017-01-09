@@ -1,18 +1,20 @@
 /**
-  * Created by mathiasedouin on 06/01/17.
+  * Created by luser on 09/01/17.
   */
 
 import org.graphframes.{GraphFrame, examples}
 import org.apache.spark.sql._
+import org.apache.spark.sql.functions._
 import org.apache.spark.SparkContext
 import org.apache.spark.SparkConf
-
 import org.apache.log4j.{Level, Logger}
+
+import scala.collection.JavaConverters._
 import scala.collection.mutable.ListBuffer
+
 
 object GraphFrameSpark {
   def main(args: Array[String]): Unit = {
-
     val sparkconf = new SparkConf().setAppName("GFDemo").setMaster("local[2]")
     val scontext = new SparkContext(sparkconf)
     val rootlogger = Logger.getRootLogger().setLevel(Level.ERROR)
@@ -130,7 +132,17 @@ object GraphFrameSpark {
     * DISPLAY OLDEST PERSON
     */
     println("THE OLDEST PERSON(S) OF THE GRAPH")
-    g.vertices.select("surname", "name", "age").where("age > 56").show() //EN CONSTRUCTION
+    val tempList = new ListBuffer[String]
+    var maxAge = 0
+    for (x <- g.vertices.groupBy().max("age").collect()) {
+      tempList += x.toString()
+    }
+    tempList.foreach {i =>
+      maxAge = i.replace("[","").replace("]","").toInt
+    }
+    maxAge = maxAge - 1
+    maxAge.toString
+    g.vertices.select("surname", "name", "age").where(s"age > $maxAge").show()
     println("--------------------------------\n")
 
     /*
@@ -222,7 +234,36 @@ object GraphFrameSpark {
       .filter("a.surname = 'Thatcher'")
       .filter("c.surname != 'Thatcher'")
       .select("b.surname", "b.name", "c.surname","c.name")
+        .dropDuplicates()
       .show()
+    println("--------------------------------\n")
+
+    /*
+     * MOST IMPORTANT/POPULAR PERSON
+    */
+
+    val tempList2 = new ListBuffer[String]
+    var minAge = 0
+    val joinDeg = g.outDegrees.join(g.inDegrees, "id")
+    val columnsToSum = ListBuffer(joinDeg.col("outDegree"), joinDeg.col("inDegree"))
+    val TableTemp = joinDeg.withColumn("sums", columnsToSum.reduce(_ + _))
+    for (x <- TableTemp.groupBy().max("sums").collect()) {
+      tempList2 += x.toString()
+    }
+    tempList2.foreach {i =>
+      minAge = i.replace("[","").replace("]","").toInt
+    }
+    minAge = minAge - 1
+    minAge.toString
+    TableTemp.select("id", "sums").where(s"sums > $minAge").show()
+    println("--------------------------------\n")
+
+
+    /*
+     * LEAST IMPORTANT/POPULAR PERSON
+    */
+    println("LEAST POPULAR/IMPORTANT PERSON")
+    joinDeg.withColumn("sums", columnsToSum.reduce(_ + _)).orderBy(asc("sums")).limit(1).select("id", "sums").show()
     println("--------------------------------\n")
   }
 }
