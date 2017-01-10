@@ -234,8 +234,8 @@ object GraphFrameSpark {
     g3.find("(a)-[]->(b) ; (b)-[]->(c) ; (c)-[]->(d)")
       .filter("a.surname = 'Thatcher'")
       .filter("c.surname != 'Thatcher'")
-      .select("b.surname", "b.name", "c.surname","c.name")
-        .dropDuplicates()
+      .select("b.surname", "b.name", "c.surname", "c.name")
+          .distinct()
       .show()
     println("--------------------------------\n")
 
@@ -277,6 +277,27 @@ object GraphFrameSpark {
     }
 
     leastPopular.select("id", "sums").where(s"sums = $tauxMinPop").show()
+    println("--------------------------------\n")
+
+    /*
+     * NUMBER OF COMMUNITIES + MEMBERS
+    */
+    println("COMMUNITIES OF THE GRAPH")
+    val coms = g.stronglyConnectedComponents.maxIter(5).run()
+    val comsNumb = coms.select("component").dropDuplicates().count()
+    println(s"There is ${comsNumb} communities in the graph")
+
+    val diffComsList = new ListBuffer[String]
+    for (x <- coms.select("component").dropDuplicates().collect()) {
+      diffComsList += x.toString()
+    }
+
+    j = 1
+    diffComsList.foreach{ i =>
+      println(s"Community $j : ")
+      coms.select("surname", "name").filter(s"component = '${i.replace("[","").replace("]","")}'").show()
+      j += 1
+    }
     println("--------------------------------\n")
   }
 }
