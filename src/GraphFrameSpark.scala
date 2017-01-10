@@ -109,7 +109,7 @@ object GraphFrameSpark {
     /*
     * DISPLAY THE SURNAMES
     */
-    val surname = g.vertices.select("surname").show()
+    g.vertices.select("surname").show()
     println("--------------------------------\n")
 
     /*
@@ -137,36 +137,37 @@ object GraphFrameSpark {
     for (x <- g.vertices.groupBy().max("age").collect()) {
       tempList += x.toString()
     }
+
     tempList.foreach {i =>
       maxAge = i.replace("[","").replace("]","").toInt
+      maxAge.toString
     }
-    maxAge = maxAge - 1
-    maxAge.toString
-    g.vertices.select("surname", "name", "age").where(s"age > $maxAge").show()
+
+    g.vertices.select("surname", "name", "age").where(s"age = $maxAge").show()
     println("--------------------------------\n")
 
     /*
     * PERSON WHO IS MOST LOVED
     */
-    println("DESC LEADERBORD FOR PEOPLE WHO ARE MOST LOVE")
+    println("LEADERBORD FOR PEOPLE WHO ARE MOST LOVE")
     val e2 = g.edges.filter("relationship = 'love'")
     val g2 = GraphFrame(v, e2)
-    g2.vertices.join(g2.inDegrees, "id").select("surname", "name", "inDegree").orderBy("inDegree").show()
+    g2.vertices.join(g2.inDegrees, "id").select("surname", "name", "inDegree").orderBy(desc("inDegree")).show()
     println("--------------------------------\n")
 
     /*
     * PERSON WHO LOVE MOST
     */
-    println("DESC LEADERBORD FOR PEOPLE WHO LOVE MOST")
-    g.vertices.join(g2.outDegrees, "id").select("surname", "name", "outDegree").orderBy("outDegree").show()
+    println("LEADERBORD FOR PEOPLE WHO LOVE MOST")
+    g.vertices.join(g2.outDegrees, "id").select("surname", "name", "outDegree").orderBy(desc("outDegree")).show()
     println("--------------------------------\n")
 
     /*
     * PERSON WHO ARE UNHAPPY IN LOVE
     */
-    println("DESC LEADERBORD FOR PEOPLE WHO ARE UNHAPPY IN LOVE")
+    println("PEOPLE WHO ARE UNHAPPY IN LOVE")
     val unhappy: DataFrame = g2.find("(a)-[]->(b); !(b)-[]->(a)")
-    unhappy.select("a.surname", "a.name").groupBy("surname", "name").count().orderBy("count").show()
+    unhappy.select("a.surname", "a.name").groupBy("surname", "name").count().orderBy(desc("count")).show()
     println("--------------------------------\n")
 
     /*
@@ -219,7 +220,7 @@ object GraphFrameSpark {
     * JO WILSON'S LOVED ONES > 18 YEARS OLD
     */
     println("ADULT LOVED ONES OF JO WILSON")
-    val LoveJo = g2.find("(a)-[e]->(b)")
+    g2.find("(a)-[e]->(b)")
       .filter("a.name = 'Wilson'")
       .filter("b.age > 18")
       .select("b.surname","b.name", "b.age")
@@ -241,29 +242,41 @@ object GraphFrameSpark {
     /*
      * MOST IMPORTANT/POPULAR PERSON
     */
-
+    println("MOST POPULAR/IMPORTANT PERSON(S)")
     val tempList2 = new ListBuffer[String]
-    var minAge = 0
+    var tauxMaxPop = 0
     val joinDeg = g.outDegrees.join(g.inDegrees, "id")
     val columnsToSum = ListBuffer(joinDeg.col("outDegree"), joinDeg.col("inDegree"))
-    val TableTemp = joinDeg.withColumn("sums", columnsToSum.reduce(_ + _))
-    for (x <- TableTemp.groupBy().max("sums").collect()) {
+    val mostPopular = joinDeg.withColumn("sums", columnsToSum.reduce(_ + _))
+    for (x <- mostPopular.groupBy().max("sums").collect()) {
       tempList2 += x.toString()
     }
+
     tempList2.foreach {i =>
-      minAge = i.replace("[","").replace("]","").toInt
+      tauxMaxPop = i.replace("[","").replace("]","").toInt
+      tauxMaxPop.toString
     }
-    minAge = minAge - 1
-    minAge.toString
-    TableTemp.select("id", "sums").where(s"sums > $minAge").show()
+
+    mostPopular.select("id", "sums").where(s"sums = $tauxMaxPop").show()
     println("--------------------------------\n")
 
 
     /*
      * LEAST IMPORTANT/POPULAR PERSON
     */
-    println("LEAST POPULAR/IMPORTANT PERSON")
-    joinDeg.withColumn("sums", columnsToSum.reduce(_ + _)).orderBy(asc("sums")).limit(1).select("id", "sums").show()
+    println("LEAST POPULAR/IMPORTANT PERSON(S)")
+    var tauxMinPop = 0
+    val leastPopular = joinDeg.withColumn("sums", columnsToSum.reduce(_ - _))
+    for (x <- leastPopular.groupBy().min("sums").collect()) {
+      tempList2 += x.toString()
+    }
+
+    tempList2.foreach {i =>
+      tauxMaxPop = i.replace("[","").replace("]","").toInt
+      tauxMaxPop.toString
+    }
+
+    leastPopular.select("id", "sums").where(s"sums = $tauxMinPop").show()
     println("--------------------------------\n")
   }
 }
