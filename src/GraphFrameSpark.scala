@@ -149,7 +149,7 @@ object GraphFrameSpark {
     /*
     * PERSON WHO IS MOST LOVED
     */
-    println("LEADERBORD FOR PEOPLE WHO ARE MOST LOVE")
+    println("LEADERBORD FOR PEOPLE WHO ARE MOST LOVED")
     val e2 = g.edges.filter("relationship = 'love'")
     val g2 = GraphFrame(v, e2)
     g2.vertices.join(g2.inDegrees, "id").select("surname", "name", "inDegree").orderBy(desc("inDegree")).show()
@@ -230,12 +230,19 @@ object GraphFrameSpark {
     /*
     * THATCHER GREY ACQUAINTANCES (AT MOST SECOND LINE)
     */
-    println("ACQUAINTANCES OF THATCHER GREY")
+    println("ACQUAINTANCES OF THATCHER GREY : FIRST LINE")
     g3.find("(a)-[]->(b) ; (b)-[]->(c) ; (c)-[]->(d)")
       .filter("a.surname = 'Thatcher'")
       .filter("c.surname != 'Thatcher'")
-      .select("b.surname", "b.name", "c.surname", "c.name")
+      .select("b.surname", "b.name")
           .distinct()
+      .show()
+    println("ACQUAINTANCES OF THATCHER GREY : SECOND LINE")
+    g3.find("(a)-[]->(b) ; (b)-[]->(c) ; (c)-[]->(d)")
+      .filter("a.surname = 'Thatcher'")
+      .filter("c.surname != 'Thatcher'")
+      .select("c.surname", "c.name")
+        .distinct()
       .show()
     println("--------------------------------\n")
 
@@ -266,14 +273,15 @@ object GraphFrameSpark {
     */
     println("LEAST POPULAR/IMPORTANT PERSON(S)")
     var tauxMinPop = 0
-    val leastPopular = joinDeg.withColumn("sums", columnsToSum.reduce(_ - _))
+    val tempList3 = new ListBuffer[String]
+    val leastPopular = joinDeg.withColumn("sums", columnsToSum.reduce(_ + _))
     for (x <- leastPopular.groupBy().min("sums").collect()) {
-      tempList2 += x.toString()
+      tempList3 += x.toString()
     }
 
-    tempList2.foreach {i =>
-      tauxMaxPop = i.replace("[","").replace("]","").toInt
-      tauxMaxPop.toString
+    tempList3.foreach {i =>
+      tauxMinPop = i.replace("[","").replace("]","").toInt
+      tauxMinPop.toString
     }
 
     leastPopular.select("id", "sums").where(s"sums = $tauxMinPop").show()
