@@ -1,0 +1,390 @@
+Using Spark's default log4j profile: org/apache/spark/log4j-defaults.properties
+17/01/13 16:39:42 INFO SparkContext: Running Spark version 2.0.2
+17/01/13 16:39:42 WARN NativeCodeLoader: Unable to load native-hadoop library for your platform... using builtin-java classes where applicable
+17/01/13 16:39:42 WARN Utils: Your hostname, mathiasedouin-VirtualBox resolves to a loopback address: 127.0.1.1; using 10.0.2.15 instead (on interface enp0s3)
+17/01/13 16:39:42 WARN Utils: Set SPARK_LOCAL_IP if you need to bind to another address
+17/01/13 16:39:42 INFO SecurityManager: Changing view acls to: mathiasedouin
+17/01/13 16:39:42 INFO SecurityManager: Changing modify acls to: mathiasedouin
+17/01/13 16:39:42 INFO SecurityManager: Changing view acls groups to: 
+17/01/13 16:39:42 INFO SecurityManager: Changing modify acls groups to: 
+17/01/13 16:39:42 INFO SecurityManager: SecurityManager: authentication disabled; ui acls disabled; users  with view permissions: Set(mathiasedouin); groups with view permissions: Set(); users  with modify permissions: Set(mathiasedouin); groups with modify permissions: Set()
+17/01/13 16:39:43 INFO Utils: Successfully started service 'sparkDriver' on port 44831.
+17/01/13 16:39:43 INFO SparkEnv: Registering MapOutputTracker
+17/01/13 16:39:43 INFO SparkEnv: Registering BlockManagerMaster
+17/01/13 16:39:43 INFO DiskBlockManager: Created local directory at /tmp/blockmgr-28b00fae-33e8-4242-80ef-eb17388f3b58
+17/01/13 16:39:43 INFO MemoryStore: MemoryStore started with capacity 211.5 MB
+17/01/13 16:39:43 INFO SparkEnv: Registering OutputCommitCoordinator
+17/01/13 16:39:43 INFO Utils: Successfully started service 'SparkUI' on port 4040.
+17/01/13 16:39:43 INFO SparkUI: Bound SparkUI to 0.0.0.0, and started at http://10.0.2.15:4040
+17/01/13 16:39:43 INFO Executor: Starting executor ID driver on host localhost
+17/01/13 16:39:43 INFO Utils: Successfully started service 'org.apache.spark.network.netty.NettyBlockTransferService' on port 42085.
+17/01/13 16:39:43 INFO NettyBlockTransferService: Server created on 10.0.2.15:42085
+17/01/13 16:39:43 INFO BlockManagerMaster: Registering BlockManager BlockManagerId(driver, 10.0.2.15, 42085)
+17/01/13 16:39:43 INFO BlockManagerMasterEndpoint: Registering block manager 10.0.2.15:42085 with 211.5 MB RAM, BlockManagerId(driver, 10.0.2.15, 42085)
+17/01/13 16:39:43 INFO BlockManagerMaster: Registered BlockManager BlockManagerId(driver, 10.0.2.15, 42085)
++---------+
+|  surname|
++---------+
+|    Izzie|
+| Meredith|
+|   Maggie|
+|    Ellis|
+|  Richard|
+|    Susan|
+| Thatcher|
+|     Rose|
+|    Derek|
+|  Addison|
+|Stephanie|
+|Catherine|
+|  Jackson|
+|    April|
+|     Mark|
+|    Lexie|
+|     Alex|
+|  Heather|
+|    Teddy|
+|    Henry|
++---------+
+only showing top 20 rows
+
+--------------------------------
+
+ALL THE RELATIONSHIPS
++--------+--------+------------+--------+--------+
+| surname|    name|relationship| surname|    name|
++--------+--------+------------+--------+--------+
+|Meredith|    Grey|        love|   Derek|Shepherd|
+|Meredith|    Grey|      family|  Maggie|  Peirce|
+|Meredith|    Grey|      family|   Ellis|    Grey|
+|Meredith|    Grey|      family|   Lexie|    Grey|
+|Meredith|    Grey|      family|Thatcher|    Grey|
+|  Maggie|  Peirce|      family|Meredith|    Grey|
+|  Maggie|  Peirce|      family|   Ellis|    Grey|
+|  Maggie|  Peirce|      family| Richard|  Webber|
+|   Ellis|    Grey|        love| Richard|  Webber|
+|   Ellis|    Grey|      family|  Maggie|  Peirce|
+|   Ellis|    Grey|      family|Meredith|    Grey|
+| Richard|  Webber|        love|   Ellis|    Grey|
+| Richard|  Webber|      family|  Maggie|  Peirce|
+|   Susan|    Grey|      family|Thatcher|    Grey|
+|Thatcher|    Grey|        love|   Ellis|    Grey|
+|Thatcher|    Grey|      family|Meredith|    Grey|
+|Thatcher|    Grey|      family|   Lexie|    Grey|
+|    Rose|        |        love|   Derek|Shepherd|
+|   Derek|Shepherd|        love|Meredith|    Grey|
+|   Derek|Shepherd|        love|    Rose|        |
++--------+--------+------------+--------+--------+
+only showing top 20 rows
+
+--------------------------------
+
+INDEGREES OF THE GRAPH
++---+--------+
+| id|inDegree|
++---+--------+
+|  a|       1|
+|  b|       5|
+|  c|       3|
+|  d|       4|
+|  e|       3|
+|  f|       1|
+|  g|       3|
+|  h|       1|
+|  i|       3|
+|  k|       1|
+|  l|       1|
+|  m|       3|
+|  n|       1|
+|  o|       3|
+|  p|       3|
+|  q|       1|
+|  r|       1|
+|  s|       1|
++---+--------+
+
+OUTDEGREES OF THE GRAPH
++---+---------+
+| id|outDegree|
++---+---------+
+|  b|        5|
+|  c|        3|
+|  d|        3|
+|  e|        2|
+|  f|        1|
+|  g|        3|
+|  h|        1|
+|  i|        2|
+|  j|        2|
+|  l|        2|
+|  m|        3|
+|  n|        1|
+|  p|        5|
+|  q|        3|
+|  s|        1|
+|  t|        1|
+|  u|        1|
++---+---------+
+
+--------------------------------
+
+THE OLDEST PERSON(S) OF THE GRAPH
++-------+------+---+
+|surname|  name|age|
++-------+------+---+
+| Maggie|Peirce| 57|
+|   Rose|      | 57|
+|  Lexie|  Grey| 57|
++-------+------+---+
+
+--------------------------------
+
+LEADERBORD FOR PEOPLE WHO ARE MOST LOVED
++---------+--------+--------+
+|  surname|    name|inDegree|
++---------+--------+--------+
+|    Derek|Shepherd|       3|
+|     Mark|   Sloan|       3|
+|    Ellis|    Grey|       2|
+|  Jackson|   Avery|       2|
+|  Richard|  Webber|       2|
+|    Izzie| Stevens|       1|
+| Meredith|    Grey|       1|
+|     Rose|        |       1|
+|    April|  Kepner|       1|
+|    Teddy|  Altman|       1|
+|  Heather|  Brooks|       1|
+|Stephanie| Edwards|       1|
+|     Alex|   Karev|       1|
+|    Lexie|    Grey|       1|
++---------+--------+--------+
+
+--------------------------------
+
+LEADERBORD FOR PEOPLE WHO LOVE MOST
++---------+----------+---------+
+|  surname|      name|outDegree|
++---------+----------+---------+
+|     Alex|     Karev|        3|
+|    Derek|  Shepherd|        2|
+|  Addison|Montgomery|        2|
+|  Jackson|     Avery|        2|
+|    Lexie|      Grey|        2|
+| Meredith|      Grey|        1|
+|    Ellis|      Grey|        1|
+| Thatcher|      Grey|        1|
+|Catherine|     Avery|        1|
+|  Richard|    Webber|        1|
+|     Rose|          |        1|
+|    April|    Kepner|        1|
+|    Teddy|    Altman|        1|
+|       Jo|    Wilson|        1|
+|    Henry|    Burton|        1|
++---------+----------+---------+
+
+--------------------------------
+
+PEOPLE WHO ARE UNHAPPY IN LOVE
++---------+----------+-----+
+|  surname|      name|count|
++---------+----------+-----+
+|     Alex|     Karev|    3|
+|    Lexie|      Grey|    2|
+|  Addison|Montgomery|    2|
+|Catherine|     Avery|    1|
+|  Jackson|     Avery|    1|
+|    Teddy|    Altman|    1|
+|       Jo|    Wilson|    1|
+| Thatcher|      Grey|    1|
+|    Henry|    Burton|    1|
++---------+----------+-----+
+
+--------------------------------
+
+NUMBER OF PEOPLE WHO ARE HAPPY IN LOVE + AGE > 20
++-----+
+|count|
++-----+
+|    6|
++-----+
+
+--------------------------------
+
+HAPPY IN LOVE WITH MORE THAN TWO PEOPLE
++---+---------+
+| id|outDegree|
++---+---------+
+|  q|        3|
++---+---------+
+
+--------------------------------
+
+CREATION OF SUBGRAPH OF FAMILY MEMBERS...
+SUBGRAPH CREATED !
+
+--------------------------------
+
+FAMILIES OF THE GRAPH
+There is 2 families in the graph
+Family 1 : 
++--------+------+
+| surname|  name|
++--------+------+
+|Meredith|  Grey|
+|Thatcher|  Grey|
+|  Maggie|Peirce|
+| Richard|Webber|
+|   Lexie|  Grey|
+|   Ellis|  Grey|
+|   Susan|  Grey|
++--------+------+
+
+Family 2 : 
++---------+-----+
+|  surname| name|
++---------+-----+
+|  Jackson|Avery|
+|Catherine|Avery|
++---------+-----+
+
+--------------------------------
+
+ADULT LOVED ONES OF JO WILSON
++-------+-----+---+
+|surname| name|age|
++-------+-----+---+
+|   Alex|Karev| 25|
++-------+-----+---+
+
+--------------------------------
+
+ACQUAINTANCES OF THATCHER GREY : FIRST LINE
++--------+----+
+| surname|name|
++--------+----+
+|Meredith|Grey|
+|   Lexie|Grey|
++--------+----+
+
+ACQUAINTANCES OF THATCHER GREY : SECOND LINE
++--------+------+
+| surname|  name|
++--------+------+
+|  Maggie|Peirce|
+|Meredith|  Grey|
+|   Lexie|  Grey|
+|   Ellis|  Grey|
+|   Susan|  Grey|
++--------+------+
+
+--------------------------------
+
+MOST POPULAR/IMPORTANT PERSON(S)
++---+----+
+| id|sums|
++---+----+
+|  b|  10|
++---+----+
+
+--------------------------------
+
+LEAST POPULAR/IMPORTANT PERSON(S)
++---+----+
+| id|sums|
++---+----+
+|  f|   2|
+|  n|   2|
+|  h|   2|
+|  s|   2|
++---+----+
+
+--------------------------------
+
+COMMUNITIES OF THE GRAPH
+There is 10 communities in the graph
+Community 1 : 
++-------+------+
+|surname|  name|
++-------+------+
+|  Henry|Burton|
++-------+------+
+
+Community 2 : 
++-------+-------+
+|surname|   name|
++-------+-------+
+|  Izzie|Stevens|
++-------+-------+
+
+Community 3 : 
++-------+-----+
+|surname| name|
++-------+-----+
+|   Mark|Sloan|
++-------+-----+
+
+Community 4 : 
++-------+------+
+|surname|  name|
++-------+------+
+|  Teddy|Altman|
++-------+------+
+
+Community 5 : 
++---------+-------+
+|  surname|   name|
++---------+-------+
+|Stephanie|Edwards|
++---------+-------+
+
+Community 6 : 
++---------+--------+
+|  surname|    name|
++---------+--------+
+|    April|  Kepner|
+|    Ellis|    Grey|
+|  Jackson|   Avery|
+|    Susan|    Grey|
+|Catherine|   Avery|
+| Thatcher|    Grey|
+|  Richard|  Webber|
+|    Lexie|    Grey|
+| Meredith|    Grey|
+|   Maggie|  Peirce|
+|     Rose|        |
+|    Derek|Shepherd|
++---------+--------+
+
+Community 7 : 
++-------+-----+
+|surname| name|
++-------+-----+
+|   Alex|Karev|
++-------+-----+
+
+Community 8 : 
++-------+----------+
+|surname|      name|
++-------+----------+
+|Addison|Montgomery|
++-------+----------+
+
+Community 9 : 
++-------+------+
+|surname|  name|
++-------+------+
+|     Jo|Wilson|
++-------+------+
+
+Community 10 : 
++-------+------+
+|surname|  name|
++-------+------+
+|Heather|Brooks|
++-------+------+
+
+--------------------------------
+
+
+Process finished with exit code 0
+
