@@ -109,6 +109,7 @@ object GraphFrameSpark {
     /*
     * DISPLAY THE SURNAMES
     */
+    println("ALL THE SURNAMES")
     g.vertices.select("surname").show()
     println("--------------------------------\n")
 
