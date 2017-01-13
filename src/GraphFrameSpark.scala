@@ -182,6 +182,13 @@ object GraphFrameSpark {
       .count()
     happy.show()
     println("--------------------------------\n")
+   
+       /*
+    * HAPPY IN LOVE WITH MORE THAN 2 PEOPLE
+    */
+    println("HAPPY IN LOVE WITH MORE THAN TWO PEOPLE")
+    g2.outDegrees.filter("outDegree > 2 ").show()
+    println("--------------------------------\n")
 
     /*
     * SUBGRAPH OF PEOPLE WHO ARE IN A FAMILY
